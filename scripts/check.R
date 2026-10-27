@@ -7,4 +7,7 @@ source("shared/schema.R")
 source("backend/R/services.R")
 router <- plumber::plumb("backend/plumber.R")
 stopifnot(inherits(router, "Plumber"))
-message("All R files parse; contracts pass; API router loads.")
+app_env <- new.env(parent = globalenv())
+app <- source("frontend/app.R", local = app_env, chdir = TRUE)$value
+stopifnot(inherits(app, "shiny.appobj"))
+message("All R files parse; contracts pass; API router and Shiny application load.")

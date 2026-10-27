@@ -7,7 +7,7 @@ feature_control <- function(name, spec, value) {
   if (!is.null(spec$choices)) return(selectInput(name, spec$label, spec$choices, selected = value))
   if (spec$type == "string") return(textInput(name, spec$label, value = value))
   numericInput(name, spec$label, value = value, min = spec$min, max = spec$max,
-               step = if (spec$type == "integer") 1 else NA)
+               step = if (spec$type == "integer") 1 else 0.1)
 }
 
 ui <- page_navbar(
