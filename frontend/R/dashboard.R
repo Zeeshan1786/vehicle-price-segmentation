@@ -16,8 +16,6 @@ dashboard_ui <- function() {
         actionButton("dash_reset", "Reset filters", class = "btn-outline-primary"),
         tags$hr(),
         actionButton("dash_reload", "Load repository dataset", class = "btn-primary"),
-        fileInput("dash_upload", "Or explore your CSV", accept = ".csv", buttonLabel = "Choose CSV"),
-        p(class = "muted text-small", "CarDekho v3 column format. Maximum 15 MB. Uploaded data stays in this session."),
         downloadButton("dash_download", "Export filtered data")),
       uiOutput("dash_source"),
       uiOutput("dash_kpis"),
@@ -77,15 +75,6 @@ dashboard_server <- function(input, output, session) {
   }
   observeEvent(TRUE, set_dataset(api_request("/data/vehicles")), once = TRUE)
   observeEvent(input$dash_reload, set_dataset(api_request("/data/vehicles")))
-  observeEvent(input$dash_upload, {
-    upload <- input$dash_upload
-    if (upload$size > 15 * 1024^2) {
-      showNotification("Choose a CSV smaller than 15 MB.", type = "error")
-      return(invisible(NULL))
-    }
-    csv <- paste(readLines(upload$datapath, warn = FALSE, encoding = "UTF-8"), collapse = "\n")
-    set_dataset(api_request("/data/preview", charToRaw(enc2utf8(csv)), content_type = "csv"))
-  })
   observeEvent(input$dash_reset, {
     req(data_state())
     updateSelectizeInput(session, "dash_brand", selected = "__all__")
@@ -95,7 +84,7 @@ dashboard_server <- function(input, output, session) {
     updateCheckboxInput(session, "dash_log", value = TRUE)
   })
   filtered <- reactive({
-    validate(need(!is.null(data_state()), "Load the repository dataset or upload a compatible CSV to explore it."))
+    validate(need(!is.null(data_state()), "Load the repository dataset to explore it."))
     values <- data_state()$vehicles
     for (pair in list(c("brand", "dash_brand"), c("fuel", "dash_fuel"), c("transmission", "dash_transmission"))) {
       choice <- input[[pair[[2]]]]
@@ -231,7 +220,7 @@ dashboard_server <- function(input, output, session) {
     filename = function() paste0("vehicle-listings-", Sys.Date(), ".csv"),
     content = function(file) {
       values <- filtered()
-      # Prevent spreadsheet formulas when arbitrary uploaded strings are exported.
+      # Protect text cells when exported to a spreadsheet.
       values[] <- lapply(values, function(x) {
         if (is.character(x)) x[grepl("^[=+@-]", x)] <- paste0("'", x[grepl("^[=+@-]", x)])
         x

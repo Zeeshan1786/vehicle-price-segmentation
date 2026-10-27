@@ -38,7 +38,7 @@ Rscript scripts/run_frontend.R
 
 Open http://127.0.0.1:3838. The API listens on http://127.0.0.1:8000; interactive API documentation is at /__docs__/.
 
-The Dashboard opens first. Filter by manufacturer, fuel, transmission and manufacturing year. Explore price distributions, distance/price relationships, manufacturer price ranges, fuel mix, feature correlations and model-year trends. Inspect source missingness and the cleaning audit, search/sort the table, or export the filtered rows. A compatible CSV can be uploaded for session-only exploration; it is audited by the API without being saved.
+The Dashboard opens first. Filter by manufacturer, fuel, transmission and manufacturing year. Explore price distributions, distance/price relationships, manufacturer price ranges, fuel mix, feature correlations and model-year trends. Inspect source missingness and the cleaning audit, search/sort the table, or export the filtered rows. The dashboard uses only the project's versioned CarDekho dataset.
 
 The initial local acquisition contains 8,128 source rows and 6,926 rows after whitespace normalization and exact-row deduplication. The source's latest manufacturing year is 2020: these are historical listing prices, not current market valuations. Acquisition metadata and SHA-256 are in data/acquisition_manifest.json. Raw data is excluded from the repository and ZIP; acquire it again after cloning.
 
