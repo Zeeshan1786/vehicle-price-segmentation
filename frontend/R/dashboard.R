@@ -1,5 +1,6 @@
 dashboard_ui <- function() {
   nav_panel("Dashboard",
+    tags$script(src = "chart-expand.js"),
     div(class = "dashboard-heading",
         div(div(class = "eyebrow", "MOTOR / VALUE INTELLIGENCE"), h2("The used-car market, explored."),
             p("Explore historical listings. Filter the market, inspect the data, then build your models.")),
@@ -23,26 +24,26 @@ dashboard_ui <- function() {
       navset_card_underline(
         nav_panel("Market overview",
           layout_columns(col_widths = c(7, 5),
-            card(card_header("Distance driven vs. listing price"),
+            card(full_screen = TRUE, class = "expandable-chart", card_header("Distance driven vs. listing price"),
                  plotOutput("dash_scatter", height = 330, hover = hoverOpts("dash_hover", delay = 100)),
                  uiOutput("dash_hover_detail"),
                  p(class = "chart-caption", "Each point is one listing. Hover to inspect. No regression model is fitted.")),
-            card(card_header("Listing price distribution"), plotOutput("dash_hist", height = 330),
+            card(full_screen = TRUE, class = "expandable-chart", card_header("Listing price distribution"), plotOutput("dash_hist", height = 330),
                  p(class = "chart-caption", "Historical asking prices, not completed sale prices."))),
           layout_columns(
-            card(card_header("Price ranges by manufacturer"), plotOutput("dash_brands", height = 320),
+            card(full_screen = TRUE, class = "expandable-chart", card_header("Price ranges by manufacturer"), plotOutput("dash_brands", height = 320),
                  p(class = "chart-caption", "Top eight manufacturers by listing count. Boxplots show median and spread.")),
-            card(card_header("Fuel mix"), plotOutput("dash_fuel_plot", height = 320),
+            card(full_screen = TRUE, class = "expandable-chart", card_header("Fuel mix"), plotOutput("dash_fuel_plot", height = 320),
                  p(class = "chart-caption", "Counts update with the active filters.")))),
         nav_panel("Relationships",
           layout_columns(
-            card(card_header("Numeric feature correlations"), plotOutput("dash_correlation", height = 400),
+            card(full_screen = TRUE, class = "expandable-chart", card_header("Numeric feature correlations"), plotOutput("dash_correlation", height = 400),
                  p(class = "chart-caption", "Pearson correlation using available pairs. Association does not establish causation.")),
-            card(card_header("Median asking price by model year"), plotOutput("dash_year_plot", height = 400),
+            card(full_screen = TRUE, class = "expandable-chart", card_header("Median asking price by model year"), plotOutput("dash_year_plot", height = 400),
                  p(class = "chart-caption", "A descriptive trend across historical listings, not a forecast.")))),
         nav_panel("Data quality",
           uiOutput("dash_audit"),
-          card(card_header("Missing source values"), plotOutput("dash_missing", height = 340),
+          card(full_screen = TRUE, class = "expandable-chart", card_header("Missing source values"), plotOutput("dash_missing", height = 340),
                p(class = "chart-caption", "Source-wide audit before deduplication and row exclusions. Dashboard filters do not change this audit."))),
         nav_panel("Data explorer", DT::DTOutput("dash_table"))
       )

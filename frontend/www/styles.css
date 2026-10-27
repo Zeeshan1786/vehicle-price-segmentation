@@ -49,5 +49,6 @@ a:focus-visible, button:focus-visible { outline: 3px solid #d3a900; outline-offs
 .audit-summary p { font-size: .85rem; margin-block: .6rem 0; }
 .text-small { font-size: .75rem; }
 .dataTables_wrapper { font-size: .8rem; }
+.expandable-chart:not([data-full-screen="true"]) .shiny-plot-output { cursor: zoom-in; }
 @media (max-width: 1100px) { .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .dashboard-heading { align-items: flex-start; flex-direction: column; } }
 @media (max-width: 640px) { .metric-grid { gap: .6rem; } .metric-card { padding: 1rem .8rem; } .bslib-sidebar-layout > .main { padding: .75rem; } }
