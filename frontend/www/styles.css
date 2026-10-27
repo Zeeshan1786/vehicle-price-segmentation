@@ -1,0 +1,30 @@
+:root { --ink: #18243b; --muted: #64728a; --line: #e1e6ef; }
+body { line-height: 1.6; }
+.navbar { border-bottom: 1px solid var(--line); background: #fff !important; padding-block: 1rem; }
+.brand-mark { font-size: 1rem; font-weight: 800; letter-spacing: .12em; color: var(--ink); }
+.container-fluid { max-width: 1320px; }
+.tab-content { padding: 1.5rem .4rem 3rem; }
+.hero { margin-bottom: 1.5rem; padding: clamp(2rem, 5vw, 4rem); background: #10264d; color: #fff; border-radius: 1.25rem; }
+.hero h1 { font-size: clamp(2.2rem, 4.7vw, 4rem); font-weight: 750; line-height: 1.12; letter-spacing: -.035em; margin-block: 1rem; }
+.hero p { max-width: 600px; color: #d5def1; font-size: 1.12rem; }
+.eyebrow { font-size: .73rem; font-weight: 750; letter-spacing: .13em; margin-bottom: .8rem; }
+.phase-pill { display: inline-block; border: 1px solid #849bb9; border-radius: 100px; padding: .35rem .8rem; font-size: .8rem; }
+.card { border: 1px solid var(--line); border-radius: 1rem; box-shadow: 0 4px 20px #172b4d05; margin-bottom: 1rem; }
+.card-header { background: transparent; border-bottom: 1px solid var(--line); font-size: .85rem; font-weight: 700; padding: 1rem 1.25rem; }
+.card-body { padding: 1.25rem; }
+h2 { font-weight: 750; letter-spacing: -.025em; }
+h3 { font-size: 1.25rem; font-weight: 700; }
+.section-intro { margin: .5rem 0 1.6rem; }
+.section-intro p, .muted { color: var(--muted); }
+.input-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .2rem 1.2rem; }
+.input-grid .shiny-input-container { width: 100%; }
+.form-control, .selectize-input { border-radius: .5rem; min-height: 2.6rem; }
+.action-row { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: 1rem; }
+.btn { border-radius: .55rem; font-weight: 650; padding: .65rem 1rem; }
+.notice { background: #edf3ff; border-left: 3px solid #2458d3; padding: 1.2rem; border-radius: .5rem; margin-top: 1rem; }
+.notice p:last-child { margin-bottom: 0; }
+.notice-error { background: #fff4ec; border-color: #b26920; }
+.empty-state { padding: 3rem .5rem; color: var(--muted); }
+.empty-state h3 { color: var(--ink); }
+a:focus-visible, button:focus-visible { outline: 3px solid #d3a900; outline-offset: 3px; }
+@media (max-width: 640px) { .input-grid { grid-template-columns: 1fr; } .hero { border-radius: .8rem; } }

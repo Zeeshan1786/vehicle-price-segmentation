@@ -1,0 +1,15 @@
+field,role,type,unit,source_mapping,missing_policy
+brand,predictor,string,,derive from name with audited manufacturer mapping,review or explicit unknown category
+model,predictor,string,,derive from name after manufacturer parsing,review or explicit unknown category
+year,predictor,integer,calendar year,year,quarantine invalid or missing source rows initially
+km_driven,predictor,number,km,km_driven,impute inside training folds after audit
+fuel,predictor,category,,fuel,unknown category after audit
+seller_type,predictor,category,,seller_type,unknown category after audit
+transmission,predictor,category,,transmission,unknown category after audit
+owner,predictor,category,,owner,unknown category after audit
+engine_cc,predictor,number,cc,parse engine and strip unit,median imputation inside training folds
+max_power_bhp,predictor,number,bhp,parse max_power and strip unit,median imputation inside training folds
+seats,predictor,integer,seats,seats,impute inside training folds after audit
+selling_price_inr,target,number,INR,selling_price,drop missing or nonpositive targets
+source_row_id,audit,string,,generate from raw file hash and row number,required for provenance
+duplicate_group_id,split control,string,,derive from listing fingerprints,keep groups in one split

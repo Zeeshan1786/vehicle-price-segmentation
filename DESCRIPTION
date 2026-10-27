@@ -1,0 +1,16 @@
+Package: vehiclepriceproject
+Title: Vehicle Price Prediction and Segmentation Project
+Version: 0.1.0
+Authors@R: person("Project", "Maintainer", role = c("aut", "cre"), email = "maintainer@example.com")
+Description: Application scaffold with a Shiny frontend and Plumber backend.
+    Training is deferred. This file declares application dependencies; this
+    repository is not an installable R package.
+License: file LICENSE
+Encoding: UTF-8
+Depends: R (>= 4.4.0)
+Imports:
+    shiny (>= 1.8.0),
+    bslib (>= 0.7.0),
+    plumber (>= 1.2.0),
+    httr2 (>= 1.0.0),
+    jsonlite (>= 1.8.0)

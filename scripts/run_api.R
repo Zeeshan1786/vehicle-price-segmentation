@@ -1,0 +1,7 @@
+if (!file.exists("shared/schema.R")) stop("Run this script from the repository root.")
+source("shared/schema.R")
+source("backend/R/services.R")
+port <- as.integer(Sys.getenv("API_PORT", "8000"))
+if (is.na(port) || port < 1L || port > 65535L) stop("Invalid API_PORT.")
+api <- plumber::plumb("backend/plumber.R")
+api$run(host = "127.0.0.1", port = port)
