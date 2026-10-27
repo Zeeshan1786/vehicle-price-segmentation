@@ -28,3 +28,26 @@ h3 { font-size: 1.25rem; font-weight: 700; }
 .empty-state h3 { color: var(--ink); }
 a:focus-visible, button:focus-visible { outline: 3px solid #d3a900; outline-offset: 3px; }
 @media (max-width: 640px) { .input-grid { grid-template-columns: 1fr; } .hero { border-radius: .8rem; } }
+.dashboard-heading { display: flex; justify-content: space-between; align-items: center; gap: 1.2rem; padding: .5rem .25rem 1rem; }
+.dashboard-heading h2 { font-size: clamp(1.8rem, 2.8vw, 2.7rem); margin-bottom: .5rem; }
+.dashboard-heading p { color: var(--muted); max-width: 700px; }
+.dashboard-heading .eyebrow { color: #2458d3; margin-bottom: .5rem; }
+.data-badge { color: #087666; background: #e2f3ed; font-size: .68rem; font-weight: 750; letter-spacing: .06em; padding: .5rem .7rem; border-radius: .4rem; white-space: nowrap; }
+.bslib-sidebar-layout { border-radius: 1rem; border: 1px solid var(--line); }
+.bslib-sidebar-layout > .sidebar { background: #fff; }
+.bslib-sidebar-layout > .main { background: #f4f6fa; padding: 1.25rem; }
+.source-line { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; font-size: .75rem; margin-bottom: 1rem; color: var(--ink); }
+.source-dot { width: 7px; height: 7px; border-radius: 50%; background: #079987; }
+.metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
+.metric-card { background: #fff; padding: 1.2rem 1.1rem; border-radius: .8rem; border: 1px solid var(--line); }
+.metric-label { color: var(--muted); font-size: .63rem; font-weight: 750; letter-spacing: .08em; }
+.metric-value { font-size: clamp(1.4rem, 2.1vw, 2rem); font-weight: 750; line-height: 1.25; margin-block: .7rem .3rem; letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.metric-detail { color: var(--muted); font-size: .69rem; }
+.chart-caption { color: var(--muted); font-size: .73rem; margin-bottom: 0; }
+.hover-detail { min-height: 1.3rem; font-size: .8rem; color: var(--ink); padding-inline: .5rem; }
+.audit-summary { padding: 1rem; background: #edf3ff; border-radius: .7rem; margin-bottom: 1rem; }
+.audit-summary p { font-size: .85rem; margin-block: .6rem 0; }
+.text-small { font-size: .75rem; }
+.dataTables_wrapper { font-size: .8rem; }
+@media (max-width: 1100px) { .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .dashboard-heading { align-items: flex-start; flex-direction: column; } }
+@media (max-width: 640px) { .metric-grid { gap: .6rem; } .metric-card { padding: 1rem .8rem; } .bslib-sidebar-layout > .main { padding: .75rem; } }

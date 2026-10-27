@@ -2,7 +2,13 @@
 
 ## Proposed source and scope
 
-Start with [Vehicle dataset by Nehal Birla on Kaggle](https://www.kaggle.com/datasets/nehalbirla/vehicle-dataset-from-cardekho), candidate file Car details v3.csv. This is a proposed source, not a downloaded or audited dataset. The candidate offers a suitable used-car context; confirm the exact columns and units in the chosen version before committing to it.
+### Acquisition status
+
+Version 4 has now been acquired locally from Kaggle's public download endpoint. The selected file contains 8,128 rows and 13 columns. Whitespace-normalized exact-row deduplication leaves 6,926 rows; no additional rows failed the initial price/year/distance guardrails. One manufacturer is unmapped. The latest manufacturing year is 2020. This first audit does not replace near-duplicate grouping, outlier review or leakage-safe train/test splits.
+
+Provider metadata reports "Database: Open Database, Contents: Database Contents". The acquisition manifest records attribution, license links, retrieval timestamp and SHA-256. Raw data stays excluded from Git and source archives. Reproduce acquisition with scripts/acquire_data.R and audit with scripts/audit_data.R. Do not treat the uploader's license metadata as independent verification of every upstream listing's rights.
+
+Source: [Vehicle dataset by Nehal Birla on Kaggle](https://www.kaggle.com/datasets/nehalbirla/vehicle-dataset-from-cardekho), file Car details v3.csv. The selected file has been downloaded and received an initial audit; remaining training preparation is described below.
 
 Initial geographic/currency scope: Indian used cars and INR. Do not combine sources with incompatible currencies, measurement units or listing periods.
 

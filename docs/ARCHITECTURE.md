@@ -21,8 +21,11 @@ flowchart LR
 - frontend/R/client.R wraps HTTP, timeouts and API-unavailable errors.
 - shared/schema.R defines required features and validates scalar values, categories and ranges.
 - backend/plumber.R defines HTTP routes; backend/R/services.R owns validation and the future inference boundary.
+- backend/R/data.R reads the local CSV, normalizes source fields, audits missingness and excludes duplicate or invalid rows. The dashboard receives these records through the API; CSV uploads use a stateless preview route.
 - scripts/ launch processes from the repository root. Raw data, preprocessing and model training never run during app startup.
 - Data files and trained artifacts stay on disk. Submitted profiles live only in the current process/session and are not written to files or a database by application code.
+
+The dashboard adds seven ggplot2 charts, session-specific reactive filters, KPI cards, a searchable/paginated DT table and CSV export. Charts describe observed records; no fitted trend or cluster assignment is implied. Source-level quality counts remain fixed when dashboard filters change.
 
 ## Current state
 

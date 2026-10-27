@@ -2,6 +2,8 @@ library(shiny)
 library(bslib)
 source("../shared/schema.R", local = TRUE)
 source("R/client.R", local = TRUE)
+source("R/dashboard.R", local = TRUE)
+options(shiny.maxRequestSize = 15 * 1024^2)
 
 feature_control <- function(name, spec, value) {
   if (!is.null(spec$choices)) return(selectInput(name, spec$label, spec$choices, selected = value))
@@ -16,6 +18,7 @@ ui <- page_navbar(
                    base_font = "system-ui"),
   header = tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "styles.css")),
   fillable = FALSE,
+  dashboard_ui(),
   nav_panel("Overview",
     div(class = "hero",
       div(class = "eyebrow", "VEHICLE INTELLIGENCE / R PROJECT"),
@@ -65,7 +68,7 @@ ui <- page_navbar(
       p("Candidate file: Car details v3.csv. Inspect the exact version, license, units, duplicates and missing values before using it."),
       tags$a("Open dataset source", href = "https://www.kaggle.com/datasets/nehalbirla/vehicle-dataset-from-cardekho",
              target = "_blank", rel = "noopener"),
-      p("The repository includes only synthetic input fixtures; no source dataset has been downloaded.")),
+      p("A versioned source acquisition is available locally for the dashboard. Raw data stays outside Git; clone users can run scripts/acquire_data.R. No models have been trained.")),
     card(card_header("Application feature contract"), tableOutput("schema_table")),
     card(card_header("Planned workflow"),
       tags$ol(
@@ -92,6 +95,7 @@ ui <- page_navbar(
 )
 
 server <- function(input, output, session) {
+  dashboard_server(input, output, session)
   status <- reactiveVal(NULL)
   result <- reactiveVal(NULL)
   refresh <- function() status(api_request("/health"))

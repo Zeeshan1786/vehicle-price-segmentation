@@ -1,7 +1,7 @@
 model_status <- function() {
   # File presence alone must never mark an unvalidated model as ready.
   list(price_model = "not_trained", segmentation_model = "not_trained",
-       inference_enabled = FALSE, phase = "structure")
+       inference_enabled = FALSE, phase = "exploration")
 }
 
 error_body <- function(code, message, details = character()) {

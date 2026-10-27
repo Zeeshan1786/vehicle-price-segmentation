@@ -2,6 +2,8 @@
 
 ## 1. Foundation — current scope
 
+Implemented expansion: a real-data exploratory dashboard, dataset acquisition/provenance, initial cleaning audit, CSV preview/upload routes and live chart-rendering checks. Training remains deferred.
+
 R Shiny frontend, Plumber backend, feature validation, explicit untrained responses, example payload, launch scripts, contract checks and documentation. No training or dataset acquisition is part of this phase.
 
 Acceptance: after dependency installation, both processes start; UI connects to health; valid requests report model-not-trained; invalid profiles are rejected; no price/segment is fabricated.

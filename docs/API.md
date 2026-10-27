@@ -11,6 +11,9 @@ No authentication is required. This is intended for loopback use.
 | GET | /segments | 503 MODEL_NOT_TRAINED |
 | POST | /predict | validates profile, then 503 MODEL_NOT_TRAINED |
 | POST | /segment | validates profile, then 503 MODEL_NOT_TRAINED |
+| GET | /data/status | source availability and full-dataset audit summary |
+| GET | /data/vehicles | audited listing records plus source and quality metadata |
+| POST | /data/preview | audit a text/csv body in memory; return records and quality metadata |
 
 Send Content-Type: application/json to POST routes. See data/example/vehicle_request.json for all required fields. No target price is accepted as an inference feature. Additional fields are rejected. Feature ranges are broad application guardrails, not a claim about observed source support.
 
@@ -28,6 +31,11 @@ Error body:
 - 400 INVALID_JSON: invalid JSON, JSON null or empty body.
 - 422 VALIDATION_ERROR: missing/unknown fields, non-scalar values, wrong types, unsupported categories or ranges.
 - 503 MODEL_NOT_TRAINED: valid request but model capability is unavailable.
+- 503 DATASET_NOT_READY: source CSV is absent or fails the audit.
+- 422 INVALID_DATASET: uploaded CSV has an invalid schema or no eligible rows.
+- 413 CSV_SIZE_LIMIT: uploaded CSV exceeds 15 MB.
+
+The dataset routes are descriptive only and fit no models. Uploaded CSVs must use the CarDekho v3 source columns, including name, year, selling_price, km_driven, fuel, seller_type, transmission, owner, engine, max_power and seats. The frontend holds the returned records in the current Shiny session. The API does not persist uploads or replace the repository dataset. VEHICLE_DATA_PATH can point to a different server-side source CSV; use an absolute path.
 
 Try a request from the repository root:
 
