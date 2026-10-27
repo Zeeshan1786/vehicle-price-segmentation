@@ -212,8 +212,8 @@ dashboard_server <- function(input, output, session) {
   output$dash_table <- DT::renderDT({
     values <- filtered()[c("name", "year", "selling_price_inr", "km_driven", "fuel", "transmission",
       "owner", "engine_cc", "max_power_bhp", "seats")]
-    DT::datatable(values, rownames = FALSE, filter = "top", escape = TRUE,
-      options = list(pageLength = 10, scrollX = TRUE, lengthMenu = c(10, 25, 50))) |>
+    DT::datatable(values, rownames = FALSE, filter = "none", escape = TRUE,
+      options = list(pageLength = 10, scrollX = TRUE, searching = FALSE, lengthChange = FALSE)) |>
       DT::formatCurrency("selling_price_inr", currency = "INR ", digits = 0)
   }, server = TRUE)
   output$dash_download <- downloadHandler(
