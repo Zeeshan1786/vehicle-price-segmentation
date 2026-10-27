@@ -7,7 +7,12 @@ dataset <- api_request("/data/vehicles")
 stopifnot(dataset$ok, isTRUE(dataset$body$ready), is.data.frame(dataset$body$vehicles),
           nrow(dataset$body$vehicles) > 0L)
 response <- api_request("/predict", vehicle_example())
-stopifnot(response$status == 503L, identical(response$body$code, "MODEL_NOT_TRAINED"))
+stopifnot(response$status == 200L, response$body$predicted_price_inr > 0,
+          identical(response$body$model_version, "linear-regression-v1"))
+options <- api_request("/predictor/options")
+stopifnot(options$ok, "Maruti" %in% options$body$fields$brand$choices,
+          "Swift Dzire VDI" %in% options$body$models_by_brand$Maruti)
+stopifnot(api_request("/segment", vehicle_example())$status == 503L)
 invalid <- vehicle_example()
 invalid$km_driven <- -100
 stopifnot(api_request("/predict", invalid)$status == 422L)
@@ -23,6 +28,13 @@ shiny::testServer(app$serverFuncSource(), {
   session$setInputs(dash_brand = "__all__", dash_fuel = "__all__", dash_transmission = "__all__",
                    dash_year = c(1980, as.integer(format(Sys.Date(), "%Y"))), dash_log = TRUE)
   session$flushReact()
+  stopifnot(grepl("Swift Dzire VDI", output$predictor_form$html, fixed = TRUE))
+  session$setInputs(brand = "Maruti", model = "Swift Dzire VDI", year = "2018",
+    km_driven = 45000, fuel = "Diesel", seller_type = "Individual", transmission = "Manual",
+    owner = "First Owner", engine_cc = 1248, max_power_bhp = 74, seats = "5", predict = 1)
+  session$flushReact()
+  stopifnot(grepl("ESTIMATED HISTORICAL LISTING PRICE", output$result$html, fixed = TRUE),
+            grepl("INR", output$result$html, fixed = TRUE))
   stopifnot(nchar(output$dash_kpis) > 0L)
   all_kpis <- output$dash_kpis
   for (name in c("dash_scatter", "dash_hist", "dash_brands", "dash_fuel_plot",
@@ -35,4 +47,4 @@ shiny::testServer(app$serverFuncSource(), {
   stopifnot(nchar(output$dash_kpis) > 0L)
   stopifnot(!identical(all_kpis, output$dash_kpis))
 })
-message("Live HTTP routes and all seven dashboard plots passed integration checks.")
+message("Live price prediction, dataset-backed inputs, HTTP routes and all seven dashboard plots passed.")

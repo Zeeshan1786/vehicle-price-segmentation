@@ -4,7 +4,7 @@ dashboard_ui <- function() {
     div(class = "dashboard-heading",
         div(div(class = "eyebrow", "MOTOR / VALUE INTELLIGENCE"), h2("The used-car market, explored."),
             p("Explore historical listings. Filter the market, inspect the data, then build your models.")),
-        span(class = "data-badge", "REAL DATA / NO MODELS TRAINED")),
+        span(class = "data-badge", "REAL DATA / R LINEAR REGRESSION")),
     layout_sidebar(
       sidebar = sidebar(width = 260, title = "Explore the market",
         selectizeInput("dash_brand", "Manufacturer", choices = c("All manufacturers" = "__all__")),
@@ -25,7 +25,7 @@ dashboard_ui <- function() {
             card(full_screen = TRUE, class = "expandable-chart", card_header("Distance driven vs. listing price"),
                  plotOutput("dash_scatter", height = 330, hover = hoverOpts("dash_hover", delay = 100)),
                  uiOutput("dash_hover_detail"),
-                 p(class = "chart-caption", "Each point is one listing. Hover to inspect. No regression model is fitted.")),
+                 p(class = "chart-caption", "Each point is one listing. Hover to inspect. This chart shows observations without a fitted line.")),
             card(full_screen = TRUE, class = "expandable-chart", card_header("Listing price distribution"), plotOutput("dash_hist", height = 330),
                  p(class = "chart-caption", "Historical asking prices, not completed sale prices."))),
           layout_columns(
@@ -199,7 +199,7 @@ dashboard_server <- function(input, output, session) {
       p(paste(format(audit$raw_rows, big.mark = ","), "source rows ·",
         audit$exact_duplicates_removed, "exact duplicates removed ·", audit$invalid_rows_removed,
         "invalid price/year/distance rows excluded ·", audit$unknown_brand_rows, "unmapped manufacturer rows.")),
-      p("Missing engine, power or seat values are retained for exploration. No imputation or model fitting has run."))
+      p("Missing specifications are retained in exploration. The price model uses training-only median imputation; the dashboard shows source values."))
   })
   output$dash_missing <- renderPlot({
     req(data_state())

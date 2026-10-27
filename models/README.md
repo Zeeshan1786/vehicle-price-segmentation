@@ -1,12 +1,12 @@
-# Future model artifacts
+# Model artifacts
 
-No trained artifacts are shipped. Both model status fields remain not_trained.
+price_model.rds contains a trained R linear regression's coefficients, fitted preprocessing metadata, dataset-derived form options and held-out metrics. The loader checks its artifact version, formula, finite coefficients and a positive example prediction before marking price inference ready. Segmentation remains not_trained.
 
-Later bundles should contain the fitted workflow/preprocessor, estimator, feature-schema version, training-data fingerprint, supported categories, model version, reference year and creation timestamp. Prediction must use the saved preprocessing steps.
+The bundle includes the source fingerprint, model version, reference year and creation timestamp. Prediction reuses training preprocessing. Per-row training data, the lm QR matrix and residuals are omitted from the shipped bundle.
 
 - price_model.rds
-- segmentation_model.rds
+- segmentation_model.rds (future)
 - metrics.json
 - MODEL_CARD.md
 
-Adding a file does not enable inference in this scaffold. Implement and validate the loader and prediction service during the integration phase. Never load untrusted RDS files uploaded by app users.
+Reproduce with Rscript scripts/train_price.R after acquiring the source dataset. See MODEL_CARD.md and metrics.json. Never load untrusted RDS files; only the trusted local model artifact is accepted.

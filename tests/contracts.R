@@ -1,5 +1,8 @@
 source("shared/schema.R")
+source("shared/price_model.R")
 source("backend/R/services.R")
+original_model_path <- Sys.getenv("PRICE_MODEL_PATH", unset = NA_character_)
+Sys.setenv(PRICE_MODEL_PATH = tempfile(fileext = ".rds"))
 
 example <- jsonlite::fromJSON("data/example/vehicle_request.json", simplifyVector = FALSE)
 stopifnot(validate_vehicle(example)$ok)
@@ -42,4 +45,5 @@ valid_json <- handle_inference(
   res, "predict")
 stopifnot(res$status == 503L, valid_json$code == "MODEL_NOT_TRAINED")
 stopifnot(identical(model_status()$inference_enabled, FALSE))
+if (is.na(original_model_path)) Sys.unsetenv("PRICE_MODEL_PATH") else Sys.setenv(PRICE_MODEL_PATH = original_model_path)
 message("Contract checks passed.")

@@ -1,18 +1,31 @@
 #* @apiTitle Vehicle Price and Segmentation API
-#* @apiDescription Structure-phase API. No models have been trained.
+#* @apiDescription Historical vehicle listing-price prediction with an R linear regression baseline.
 #* @serializer unboxedJSON
 
 #* Health check; healthy does not mean inference-ready
 #* @get /health
 function() {
-  list(status = "ok", phase = "exploration", models = model_status())
+  list(status = "ok", phase = model_status()$phase, models = model_status())
 }
 
 #* Feature definitions and a synthetic input example
 #* @get /schema
 function() {
-  list(schema_version = "1.0", currency = "INR",
-       fields = vehicle_schema(), example = vehicle_example())
+  bundle <- load_price_model()
+  list(schema_version = "1.1", currency = "INR",
+       fields = if (is.null(bundle)) vehicle_schema() else bundle$input_options$fields,
+       example = if (is.null(bundle)) vehicle_example() else bundle$input_options$example)
+}
+
+#* Dataset-backed predictor input options and held-out evaluation
+#* @get /predictor/options
+function(res) {
+  bundle <- load_price_model()
+  if (is.null(bundle)) {
+    res$status <- 503L
+    return(error_body("MODEL_NOT_TRAINED", "The price predictor is not available yet."))
+  }
+  bundle$input_options
 }
 
 #* Model readiness
@@ -28,7 +41,7 @@ function(res) {
   error_body("MODEL_NOT_TRAINED", "Segment profiles are unavailable until training.")
 }
 
-#* Request a future price estimate
+#* Estimate historical listing price with the trained linear regression
 #* @post /predict
 function(req, res) {
   handle_inference(req, res, "predict")

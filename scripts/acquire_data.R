@@ -23,7 +23,7 @@ manifest <- list(source_url = "https://www.kaggle.com/datasets/nehalbirla/vehicl
   license = metadata$licenseName, attribution = "Nehal Birla; upstream listing context: CarDekho",
   license_url = "https://opendatacommons.org/licenses/odbl/1-0/",
   contents_license_url = "https://opendatacommons.org/licenses/dbcl/1-0/",
-  sha256 = as.character(openssl::sha256(file(destination, "rb"))),
+  sha256 = paste0(openssl::sha256(file(destination, "rb"))),
   audit = dataset$report,
   note = "Historical listing prices; not completed sale prices. Raw data remains excluded from Git.")
 jsonlite::write_json(manifest, "data/acquisition_manifest.json", auto_unbox = TRUE, pretty = TRUE)

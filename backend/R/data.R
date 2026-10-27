@@ -41,6 +41,10 @@ prepare_vehicles <- function(raw) {
   valid <- with(values, is.finite(year) & year >= 1980 & year <= as.integer(format(Sys.Date(), "%Y")) &
     is.finite(selling_price_inr) & selling_price_inr > 0 & is.finite(km_driven) & km_driven >= 0)
   values <- values[valid, , drop = FALSE]
+  values$model <- vapply(seq_len(nrow(values)), function(i) {
+    if (values$brand[[i]] == "Unknown") return(values$name[[i]])
+    trimws(substring(values$name[[i]], nchar(values$brand[[i]]) + 1L))
+  }, character(1))
   if (!nrow(values)) stop("No valid rows remain after the dataset audit.")
   list(vehicles = values, missingness = missingness,
        report = list(raw_rows = nrow(raw), usable_rows = nrow(values),

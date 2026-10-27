@@ -19,14 +19,13 @@ vehicle_schema <- function() {
 }
 
 vehicle_example <- function() {
-  list(brand = "Maruti", model = "Swift", year = 2018L, km_driven = 45000,
-       fuel = "Petrol", seller_type = "Individual", transmission = "Manual",
-       owner = "First Owner", engine_cc = 1197, max_power_bhp = 81.8, seats = 5L)
+  list(brand = "Maruti", model = "Swift Dzire VDI", year = 2018L, km_driven = 45000,
+       fuel = "Diesel", seller_type = "Individual", transmission = "Manual",
+       owner = "First Owner", engine_cc = 1248, max_power_bhp = 74, seats = 5L)
 }
 
-validate_vehicle <- function(x) {
+validate_vehicle <- function(x, schema = vehicle_schema()) {
   errors <- character()
-  schema <- vehicle_schema()
   if (!is.list(x) || is.null(names(x)) || anyDuplicated(names(x)) > 0L) {
     return(list(ok = FALSE, errors = "Body must be one JSON object with unique field names."))
   }

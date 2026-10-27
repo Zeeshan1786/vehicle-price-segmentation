@@ -1,13 +1,13 @@
 {
   "brand": "Maruti",
-  "model": "Swift",
+  "model": "Swift Dzire VDI",
   "year": 2018,
   "km_driven": 45000,
-  "fuel": "Petrol",
+  "fuel": "Diesel",
   "seller_type": "Individual",
   "transmission": "Manual",
   "owner": "First Owner",
-  "engine_cc": 1197,
-  "max_power_bhp": 81.8,
+  "engine_cc": 1248,
+  "max_power_bhp": 74,
   "seats": 5
 }

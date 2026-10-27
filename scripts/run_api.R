@@ -1,5 +1,6 @@
 if (!file.exists("shared/schema.R")) stop("Run this script from the repository root.")
 source("shared/schema.R")
+source("shared/price_model.R")
 source("backend/R/services.R")
 source("backend/R/data.R")
 Sys.setenv(VEHICLE_PROJECT_ROOT = normalizePath("."))

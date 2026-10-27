@@ -1,7 +1,9 @@
 model_status <- function() {
-  # File presence alone must never mark an unvalidated model as ready.
-  list(price_model = "not_trained", segmentation_model = "not_trained",
-       inference_enabled = FALSE, phase = "exploration")
+  bundle <- load_price_model()
+  list(price_model = if (is.null(bundle)) "not_trained" else "trained",
+       segmentation_model = "not_trained", inference_enabled = !is.null(bundle),
+       price_model_version = if (is.null(bundle)) NULL else bundle$model_version,
+       phase = if (is.null(bundle)) "exploration" else "price_prediction")
 }
 
 error_body <- function(code, message, details = character()) {
@@ -10,6 +12,10 @@ error_body <- function(code, message, details = character()) {
 
 infer_vehicle <- function(vehicle, task) {
   if (!(task %in% c("predict", "segment"))) stop("Unsupported service task.")
+  if (task == "predict") {
+    bundle <- load_price_model()
+    if (!is.null(bundle)) return(predict_vehicle_price(vehicle, bundle))
+  }
   validation <- validate_vehicle(vehicle)
   if (!validation$ok) {
     return(list(http_status = 422L, body = error_body(

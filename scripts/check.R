@@ -4,6 +4,7 @@ r_files <- list.files(c("frontend", "backend", "shared", "scripts", "tests"),
 invisible(lapply(r_files, parse))
 source("tests/contracts.R")
 source("tests/data.R")
+source("tests/price.R")
 source("shared/schema.R")
 source("backend/R/services.R")
 source("backend/R/data.R")

@@ -10,8 +10,8 @@ flowchart LR
   U[Browser] --> S[R Shiny frontend :3838]
   S --> P[R Plumber API :8000]
   P --> V[Shared input validation]
-  V --> M[Future versioned RDS workflows]
-  C[Local source CSV] --> T[Future offline R training]
+  V --> M[Versioned coefficient and preprocessing RDS]
+  C[Local source CSV] --> T[Offline R training]
   T --> M
 ```
 
@@ -29,7 +29,7 @@ The dashboard adds seven ggplot2 charts, session-specific reactive filters, KPI 
 
 ## Current state
 
-GET health/schema/status routes work independently of models. Valid inference requests receive 503 MODEL_NOT_TRAINED. Malformed JSON receives 400; valid JSON that violates the feature contract receives 422. The health route indicates process availability, not readiness to predict.
+GET health/schema/status routes report model readiness. The validated price artifact enables 200 price estimates and dataset-based predictor options. Missing/invalid artifacts and untrained segmentation receive 503 MODEL_NOT_TRAINED. Malformed JSON receives 400; invalid feature combinations receive 422. Nonpositive linear estimates are rejected with 422 UNSUPPORTED_ESTIMATE. The health route indicates process availability; inspect its model fields for capability readiness.
 
 ## Future model integration
 
