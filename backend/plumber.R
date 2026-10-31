@@ -1,5 +1,5 @@
 #* @apiTitle Vehicle Price and Segmentation API
-#* @apiDescription Historical vehicle listing-price prediction with an R linear regression baseline.
+#* @apiDescription Historical vehicle listing-price prediction with a cross-validation-selected R random forest.
 #* @serializer unboxedJSON
 
 #* Health check; healthy does not mean inference-ready
@@ -41,7 +41,7 @@ function(res) {
   error_body("MODEL_NOT_TRAINED", "Segment profiles are unavailable until training.")
 }
 
-#* Estimate historical listing price with the trained linear regression
+#* Estimate historical listing price with the trained R model
 #* @post /predict
 function(req, res) {
   handle_inference(req, res, "predict")

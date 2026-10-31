@@ -1,0 +1,85 @@
+{
+  "selection": "rf_m11_node3",
+  "folds": 5,
+  "fold_seed": 2027,
+  "criterion": "Minimum pooled out-of-fold RMSE on training records",
+  "results": [
+    {
+      "model": "rf_m11_node3",
+      "mae_inr": 78639.1127,
+      "rmse_inr": 170533.7286,
+      "r_squared": 0.8956
+    },
+    {
+      "model": "rf_m11_node5",
+      "mae_inr": 78353.1656,
+      "rmse_inr": 170560.8787,
+      "r_squared": 0.8956
+    },
+    {
+      "model": "rf_m8_node3",
+      "mae_inr": 78464.5253,
+      "rmse_inr": 170754.8187,
+      "r_squared": 0.8953
+    },
+    {
+      "model": "rf_m8_node5",
+      "mae_inr": 78268.7955,
+      "rmse_inr": 171040.6988,
+      "r_squared": 0.895
+    },
+    {
+      "model": "rf_m4_node3",
+      "mae_inr": 77966.7173,
+      "rmse_inr": 172185.4798,
+      "r_squared": 0.8936
+    },
+    {
+      "model": "rf_m4_node5",
+      "mae_inr": 77864.6021,
+      "rmse_inr": 172669.1862,
+      "r_squared": 0.893
+    },
+    {
+      "model": "linear_regression",
+      "mae_inr": 147276.7391,
+      "rmse_inr": 291153.8014,
+      "r_squared": 0.6957
+    }
+  ],
+  "configs": [
+    {
+      "mtry": 4,
+      "min_node_size": 3,
+      "model": "rf_m4_node3"
+    },
+    {
+      "mtry": 8,
+      "min_node_size": 3,
+      "model": "rf_m8_node3"
+    },
+    {
+      "mtry": 11,
+      "min_node_size": 3,
+      "model": "rf_m11_node3"
+    },
+    {
+      "mtry": 4,
+      "min_node_size": 5,
+      "model": "rf_m4_node5"
+    },
+    {
+      "mtry": 8,
+      "min_node_size": 5,
+      "model": "rf_m8_node5"
+    },
+    {
+      "mtry": 11,
+      "min_node_size": 5,
+      "model": "rf_m11_node5"
+    }
+  ],
+  "source_sha256": "1b2a30b2f36fd246366773fe5375399692f1a113890ad2a6d464b8c8deaadadb",
+  "forest_seed": 2034,
+  "trees": 500
+}

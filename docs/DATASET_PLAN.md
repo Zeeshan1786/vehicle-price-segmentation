@@ -4,7 +4,7 @@
 
 ### Acquisition and modeling status
 
-An R linear-regression price baseline has now been trained. The grouping, train-only preprocessing, exact train/test counts and metrics are documented in models/MODEL_CARD.md. The earlier experiment recommendations below remain guidance for future models; the current fixed baseline does not claim grouped cross-validation or temporal evaluation. Segmentation remains planned.
+An R linear baseline and a training-only-CV-selected random forest have now been trained. The grouping, train-only preprocessing, exact train/test counts and metrics are documented in models/MODEL_CARD.md. The earlier experiment recommendations below remain guidance for future models; the selected forest uses grouped cross-validation but does not claim temporal or fresh external evaluation. Segmentation remains planned.
 
 Version 4 has now been acquired locally from Kaggle's public download endpoint. The selected file contains 8,128 rows and 13 columns. Whitespace-normalized exact-row deduplication leaves 6,926 rows; no additional rows failed the initial price/year/distance guardrails. One manufacturer is unmapped. The latest manufacturing year is 2020. This first audit does not replace near-duplicate grouping, outlier review or leakage-safe train/test splits.
 

@@ -1,0 +1,30 @@
+{
+  "model_version": "linear-regression-v1",
+  "training": {
+    "seed": 2026,
+    "split": "80/20 inference-profile group split",
+    "train_rows": 5533,
+    "test_rows": 1393,
+    "train_groups": 5357,
+    "test_groups": 1340,
+    "group_overlap": 0,
+    "rank": 103,
+    "imputation": "Training medians; zero power treated as missing",
+    "family_pooling": "Manufacturer plus first model token; fewer than 10 training rows pooled"
+  },
+  "metrics": {
+    "model": {
+      "mae_inr": 139368.69573629,
+      "rmse_inr": 245326.96975264,
+      "r_squared": 0.74532635
+    },
+    "median_baseline": {
+      "mae_inr": 270622.85211773,
+      "rmse_inr": 496986.21927778,
+      "r_squared": -0.04515842
+    },
+    "test_nonpositive_predictions": 88,
+    "note": "Test metrics use raw predictions without clipping. Nonpositive interactive estimates are rejected."
+  },
+  "source_sha256": "1b2a30b2f36fd246366773fe5375399692f1a113890ad2a6d464b8c8deaadadb"
+}

@@ -68,14 +68,16 @@ server <- function(input, output, session) {
     options <- predictor_options()
     req(options)
     metrics <- options$metrics$model
-    div(p(strong("Multiple linear regression · R stats::lm")),
+    div(p(strong(if (is.null(options$algorithm_label)) "Multiple linear regression · R stats::lm" else options$algorithm_label)),
       p(paste0(format(options$training$train_rows, big.mark = ","), " training records · ",
         format(options$training$test_rows, big.mark = ","), " held-out test records · matching profiles kept together")),
       p(paste0("Test MAE: INR ", format(round(metrics$mae_inr), big.mark = ","),
         " · RMSE: INR ", format(round(metrics$rmse_inr), big.mark = ","),
         " · R-squared: ", round(metrics$r_squared, 3))),
-      p(class = "muted", paste(options$metrics$test_nonpositive_predictions,
-        "test estimates were nonpositive; the interactive predictor rejects those results. Metrics include them without clipping.")))
+      if (!is.null(options$metrics$linear_baseline)) p(paste0(
+        "Linear baseline: R-squared ", round(options$metrics$linear_baseline$r_squared, 3),
+        " · MAE INR ", format(round(options$metrics$linear_baseline$mae_inr), big.mark = ","))),
+      p(class = "muted", "Model settings were selected using five-fold grouped cross-validation within the training set. Every record in the unchanged test set is included in these test metrics. R-squared measures explained variation, not percentage accuracy."))
   })
 
   submit_profile <- function(task) {
@@ -101,7 +103,7 @@ server <- function(input, output, session) {
     current <- result()
     if (is.null(current)) return(div(class = "empty-state", h3("Your result will appear here"),
       p("Complete the vehicle profile and click Predict price."),
-      span(class = "phase-pill", "Linear regression trained in R")))
+      span(class = "phase-pill", "Price model trained in R")))
     body <- current$body
     if (identical(body$status, "ok") && !is.null(body$predicted_price_inr)) {
       return(div(class = "notice",

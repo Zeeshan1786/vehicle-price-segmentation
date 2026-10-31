@@ -1,42 +1,39 @@
-# Vehicle price linear regression v1
+# Vehicle price random forest v1
 
-Status: TRAINED. Algorithm: R `stats::lm`, ordinary least squares, raw INR target.
-The saved artifact contains only coefficients and preprocessing/aggregate input metadata; no source rows, fitted training values, residuals or QR matrix are included.
+Status: TRAINED. Selected model: R ranger random forest. The original R stats::lm baseline is retained in linear_baseline.rds and can be reproduced with scripts/train_linear.R.
 
 ## Data and intended use
 
-Historical Indian used-car listing-price exploration using Nehal Birla's CarDekho dataset, version 4, `Car details v3.csv`. Source provenance and SHA-256 appear in `data/acquisition_manifest.json` and `models/metrics.json`. The dashboard audit retains 6,926 of 8,128 rows after whitespace-normalized exact-row deduplication. Latest manufacturing year: 2020.
+Historical Indian used-car asking-price exploration using Nehal Birla's CarDekho dataset, version 4, Car details v3.csv. Source attribution, reported license and SHA-256 appear in data/acquisition_manifest.json and models/metrics.json. Whitespace-normalized exact-row deduplication retains 6,926 of 8,128 records. Latest manufacturing year: 2020. Prices are INR asking prices, not sale prices or current appraisals.
 
-## Features
+## Features and preprocessing
 
-Year, distance driven, fuel, seller type, transmission, ownership, engine cc, maximum power bhp, seats and manufacturer/model family. A family combines manufacturer with the first token of the model/variant. Exact variants remain selectable in the form, but their family is used in regression. Families with fewer than ten training rows share an Other coefficient.
+Year, distance, engine cc, maximum power bhp, seats, fuel, seller type, transmission, ownership, manufacturer and manufacturer/model family: 11 predictors. Selling price is the target. Exact variants remain selectable; the first model token defines the family. Manufacturer and family groups with fewer than three analysis/training records are pooled. Numeric medians and categorical fallbacks are learned only on each analysis fold or final training partition. Nonpositive power is treated as missing. Mileage and torque remain omitted because mixed units and compound source formats need further work.
 
-Listing price is the target. Mileage and torque are omitted because mixed units and compound source formats need additional cleaning. IDs and price-derived features are excluded.
+## Split and selection
 
-## Split and preprocessing
+The original seed-2026 split is unchanged: 5,533 training rows / 5,357 matching-profile groups, and 1,393 test rows / 1,340 groups. Group overlap is zero. Profiles use every available inference field, excluding target price. Without VIN/listing IDs, other near-duplicate leakage remains possible.
 
-Seed 2026; approximately 80/20 split by identical full input profiles, excluding target price. Training: 5,533 rows / 5,357 groups. Test: 1,393 rows / 1,340 groups. Group overlap: zero. Exact matching profiles with different listed prices stay together. Without VIN/listing identifiers, other near-duplicate leakage remains possible; this is not a temporal evaluation.
+Five-fold grouped cross-validation within training data (fold seed 2027) compared the linear baseline and six random forests: mtry 4/8/11 crossed with min.node.size 3/5, each with 500 trees. Preprocessing was refitted inside each fold. Minimum pooled out-of-fold RMSE selected mtry 11 and node size 3; CV MAE was INR 78,639, RMSE INR 170,534 and R-squared 0.8956. The selected settings were recorded before evaluating the unchanged test set.
 
-Numeric imputation medians, category fallbacks and rare-family pooling are learned only from training rows. Nonpositive power is treated as missing. The fitted model has rank 103 and no aliased coefficients. The deployed coefficients are the evaluated training fit; there is no post-evaluation refit on test data.
+Final forest seed: 2034; 500 trees; variance splits; ordered handling of unordered factors; 2 threads. It was fitted on training rows only and was not refitted on test labels. Default training reproduces these recorded settings; compare_price_models.R reproduces selection separately. The model-selection file is tied to the source-data SHA-256.
 
-## Held-out results
+## Unchanged test benchmark
 
-| Metric | Linear regression | Training-median baseline |
-| --- | ---: | ---: |
-| MAE (INR) | 139,369 | 270,623 |
-| RMSE (INR) | 245,327 | 496,986 |
-| R-squared | 0.7453 | -0.0452 |
+| Metric | Random forest | Linear baseline | Median baseline |
+| --- | ---: | ---: | ---: |
+| MAE (INR) | 72,503 | 139,369 | 270,623 |
+| RMSE (INR) | 133,784 | 245,327 | 496,986 |
+| R-squared | 0.9243 | 0.7453 | -0.0452 |
 
-MAE is the average absolute price error, not a guaranteed error bound. R-squared is not classification accuracy. Metrics use every raw test prediction without clipping or dropping negative outputs.
+All 1,393 original test rows are included, with no output clipping or outlier removal. All forest estimates were positive; the linear baseline produced 88 nonpositive estimates. R-squared is explained variation, not classification accuracy. MAE is a population average and not an error bound for an individual vehicle. No calibrated prediction intervals are provided. OOB training diagnostics are distinct from CV and held-out scores.
 
-## Limitations and UI behavior
+## Evaluation limits
 
-88 of 1,393 test predictions were nonpositive (about 6.3%). The API rejects nonpositive estimates with an actionable error instead of displaying an impossible price. The model is a simple baseline and can be poor for rare, old, expensive or unusual combinations. There are no calibrated prediction intervals.
+The test benchmark had already been viewed for the linear model before the improvement request. Model settings were selected using training-only CV, but the reported test result is a reused development benchmark, not a fresh blind audit. A new external dataset, later-period listings or separately reserved future data is needed for independently verified performance. Source-specific duplicates, historical sampling, sparse luxury vehicles and missing condition/accident/service/region information limit generalization. Forest predictions also do not extrapolate numeric trends beyond learned splits.
 
-Input categories and ranges come from the source dataset. The API checks manufacturer/model compatibility, warns for pooled families and numeric extrapolation, and applies documented training-mode fallbacks for categorical levels absent from the training split. The frontend shows the evaluated metrics and warnings beside estimates.
+## Artifacts and API
 
-Vehicle condition, accident history, region, market date and service history are unavailable. These are historical asking prices, not completed sales or current appraisals. Segmentation remains untrained.
+price_model.rds contains fitted trees and preprocessing/aggregate form metadata. Per-row OOB predictions, calls and in-bag counts are excluded. The loader accepts validated trusted local forest or legacy linear bundles. Inputs are checked against dataset categories, numeric ranges and manufacturer/model compatibility. Pooled groups, fallback categories and numeric extrapolation produce warnings. Segmentation remains untrained.
 
-## Reproduce
-
-Run `Rscript scripts/acquire_data.R` if needed, then `Rscript scripts/train_price.R` from the root. The script writes the model, metrics and ignored split/test-output CSVs. Training never runs during API startup.
+Reproduce: acquire source if needed, run scripts/setup.R, then scripts/train_price.R. Training never runs at API startup. metrics.json, linear_metrics.json and model_selection.json preserve the comparison and selection evidence; row-level splits and predictions remain ignored in data/processed.

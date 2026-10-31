@@ -31,7 +31,7 @@ Error body:
 
 - 400 INVALID_JSON: invalid JSON, JSON null or empty body.
 - 422 VALIDATION_ERROR: missing/unknown fields, non-scalar values, wrong types, unsupported categories or ranges.
-- 422 UNSUPPORTED_ESTIMATE: this linear baseline produced a nonpositive/nonfinite estimate for the submitted combination; no price is returned.
+- 422 UNSUPPORTED_ESTIMATE: this price model produced a nonpositive/nonfinite estimate for the submitted combination; no price is returned.
 - 503 MODEL_NOT_TRAINED: valid request but model capability is unavailable.
 - 503 DATASET_NOT_READY: source CSV is absent or fails the audit.
 - 422 INVALID_DATASET: uploaded CSV has an invalid schema or no eligible rows.

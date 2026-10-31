@@ -4,7 +4,7 @@ dashboard_ui <- function() {
     div(class = "dashboard-heading",
         div(div(class = "eyebrow", "MOTOR / VALUE INTELLIGENCE"), h2("The used-car market, explored."),
             p("Explore historical listings. Filter the market, inspect the data, then build your models.")),
-        span(class = "data-badge", "REAL DATA / R LINEAR REGRESSION")),
+        span(class = "data-badge", "REAL DATA / R RANDOM FOREST")),
     layout_sidebar(
       sidebar = sidebar(width = 260, title = "Explore the market",
         selectizeInput("dash_brand", "Manufacturer", choices = c("All manufacturers" = "__all__")),

@@ -1,5 +1,6 @@
 {
-  "model_version": "linear-regression-v1",
+  "model_version": "random-forest-v1",
+  "algorithm": "Random forest (R ranger)",
   "training": {
     "seed": 2026,
     "split": "80/20 inference-profile group split",
@@ -8,12 +9,72 @@
     "train_groups": 5357,
     "test_groups": 1340,
     "group_overlap": 0,
-    "rank": 103,
     "imputation": "Training medians; zero power treated as missing",
-    "family_pooling": "Manufacturer plus first model token; fewer than 10 training rows pooled"
+    "family_pooling": "Manufacturer plus first model token; fewer than 3 training rows pooled. Brand is also included.",
+    "selection": {
+      "folds": 5,
+      "fold_seed": 2027,
+      "criterion": "Minimum pooled out-of-fold RMSE on training records",
+      "selected_config": {
+        "mtry": 11,
+        "min_node_size": 3,
+        "model": "rf_m11_node3"
+      },
+      "cv_results": [
+        {
+          "model": "rf_m11_node3",
+          "mae_inr": 78639.1127,
+          "rmse_inr": 170533.7286,
+          "r_squared": 0.8956
+        },
+        {
+          "model": "rf_m11_node5",
+          "mae_inr": 78353.1656,
+          "rmse_inr": 170560.8787,
+          "r_squared": 0.8956
+        },
+        {
+          "model": "rf_m8_node3",
+          "mae_inr": 78464.5253,
+          "rmse_inr": 170754.8187,
+          "r_squared": 0.8953
+        },
+        {
+          "model": "rf_m8_node5",
+          "mae_inr": 78268.7955,
+          "rmse_inr": 171040.6988,
+          "r_squared": 0.895
+        },
+        {
+          "model": "rf_m4_node3",
+          "mae_inr": 77966.7173,
+          "rmse_inr": 172185.4798,
+          "r_squared": 0.8936
+        },
+        {
+          "model": "rf_m4_node5",
+          "mae_inr": 77864.6021,
+          "rmse_inr": 172669.1862,
+          "r_squared": 0.893
+        },
+        {
+          "model": "linear_regression",
+          "mae_inr": 147276.7391,
+          "rmse_inr": 291153.8014,
+          "r_squared": 0.6957
+        }
+      ],
+      "trees": 500,
+      "forest_seed": 2034
+    }
   },
   "metrics": {
     "model": {
+      "mae_inr": 72503.39198854,
+      "rmse_inr": 133783.89261852,
+      "r_squared": 0.92426422
+    },
+    "linear_baseline": {
       "mae_inr": 139368.69573629,
       "rmse_inr": 245326.96975264,
       "r_squared": 0.74532635
@@ -23,8 +84,8 @@
       "rmse_inr": 496986.21927778,
       "r_squared": -0.04515842
     },
-    "test_nonpositive_predictions": 88,
-    "note": "Test metrics use raw predictions without clipping. Nonpositive interactive estimates are rejected."
+    "test_nonpositive_predictions": 0,
+    "note": "Selected using training-only grouped CV, then evaluated on the unchanged original test set. No test records or estimates were clipped or removed. This previously viewed test set is a fixed benchmark, not a new external audit."
   },
   "source_sha256": "1b2a30b2f36fd246366773fe5375399692f1a113890ad2a6d464b8c8deaadadb"
 }

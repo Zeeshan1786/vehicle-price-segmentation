@@ -2,7 +2,7 @@
 
 An R-first data science application for estimating used-car listing prices and discovering groups of similar vehicles.
 
-**Working dashboard and trained price predictor.** The Price predictor tab uses an R `stats::lm` multiple linear regression with dataset-backed inputs and real INR estimates. Segmentation remains untrained. No database or login is required.
+**Working dashboard and trained price predictor.** The Price predictor tab uses an R `ranger` random forest selected by training-only grouped cross-validation with dataset-backed inputs and real INR estimates. Segmentation remains untrained. No database or login is required.
 
 ## Stack
 
@@ -10,21 +10,21 @@ An R-first data science application for estimating used-car listing prices and d
 - Visualization: seven expandable ggplot2 charts, reactive filters, summary metrics and a paginated DT table.
 - Backend: R Plumber REST API; server-side validation and stable JSON errors.
 - Data: local CSV files, with raw and processed data excluded from Git.
-- Model: versioned RDS coefficients/preprocessing bundle; training and prediction use base R statistics.
+- Model: versioned RDS trained-model/preprocessing bundle; training and prediction run in R; linear regression is retained as a baseline.
 
 ## Price prediction
 
-Open **Price predictor**, choose a manufacturer and model/variant from the dataset, enter the vehicle specifications, then click **Predict price**. Category choices, year/seat options and numeric ranges come from the source dataset. The form never accepts selling price as an input. Manufacturer and the first model token form the regression's vehicle-family feature; rare families are pooled. Mileage and torque are omitted from this baseline because their source units/formats vary.
+Open **Price predictor**, choose a manufacturer and model/variant from the dataset, enter the vehicle specifications, then click **Predict price**. Category choices, year/seat options and numeric ranges come from the source dataset. The form never accepts selling price as an input. Manufacturer and the first model token form the model's vehicle-family feature; rare families are pooled, and manufacturer is also a forest feature. Mileage and torque are omitted from this predictor because their source units/formats vary.
 
-The checked-in model uses 5,533 training rows and 1,393 held-out test rows, split by matching input profiles with seed 2026. Matching groups do not overlap. Training-only medians handle missing specifications.
+The checked-in model uses 5,533 training rows and the unchanged 1,393-row test benchmark, split by matching input profiles with seed 2026. Matching groups do not overlap. Training-only medians handle missing specifications. Five-fold grouped CV within training data compared the linear baseline and six forest settings; minimum pooled CV RMSE selected 500 trees, mtry 11 and node size 3. The selected forest achieved pooled training-only CV R-squared 0.8956.
 
-| Test metric | Linear regression | Median-price baseline |
-| --- | ---: | ---: |
-| MAE (INR) | 139,369 | 270,623 |
-| RMSE (INR) | 245,327 | 496,986 |
-| R-squared | 0.7453 | -0.0452 |
+| Test metric | Random forest | Linear regression | Median-price baseline |
+| --- | ---: | ---: | ---: |
+| MAE (INR) | 72,503 | 139,369 | 270,623 |
+| RMSE (INR) | 133,784 | 245,327 | 496,986 |
+| R-squared | 0.9243 | 0.7453 | -0.0452 |
 
-This is a historical listing-price baseline, not a current appraisal. 88 test estimates were nonpositive; the API rejects such interactive estimates. Metrics include all raw test predictions without clipping. R-squared is not prediction accuracy. See the [model card](models/MODEL_CARD.md) for limitations and preprocessing details.
+This is a historical listing-price baseline, not a current appraisal. All selected-forest test estimates were positive. Metrics include every original test record without clipping, removing outliers or changing the split. This test set was previously viewed while developing the linear baseline, so these are fixed benchmark results; a new external or future-data evaluation remains necessary. R-squared is not prediction accuracy. See the [model card](models/MODEL_CARD.md) for limitations and preprocessing details.
 
 ## Run locally
 
@@ -65,11 +65,11 @@ In RStudio, use separate R sessions for the two launch scripts because each serv
 ```text
 frontend/                 Shiny UI, server, HTTP client, CSS
 backend/                  Plumber routes and service boundary
-shared/                   Feature validation and regression preprocessing/inference
+shared/                   Feature validation and model preprocessing/inference
 data/example/             Synthetic input fixtures; never training data
 data/raw/                 Downloaded source CSV, ignored
 data/processed/           Audit, split manifest and test predictions, ignored
-models/                   Checked-in price coefficients, metrics and model card
+models/                   Trained models, selection results, metrics and model card
 scripts/                  Setup, launch, audit, training and checks
 tests/                    Validation, trained prediction and live app checks
 docs/                     Architecture, dataset plan, roadmap, API contract
@@ -90,8 +90,8 @@ docs/                     Architecture, dataset plan, roadmap, API contract
 Rscript scripts/check.R
 ```
 
-Checks parse all R sources, exercise missing-model fallback, trained price inference and validation, and verify that the Plumber router and Shiny app load. CI uses the same command. No training occurs during setup, checks, or app startup.
+Checks parse all R sources, exercise missing-model fallback, trained price inference and validation, and verify that the Plumber router and Shiny app load. CI uses the same command. No training occurs during setup, checks, or app startup. `scripts/train_price.R` reproduces both baselines and the selected forest; `scripts/compare_price_models.R` reruns the full grouped CV experiment into ignored processed files without replacing the deployed model.
 
 With the API running and a dataset available, run `Rscript tests/live.R` for successful price prediction, input options, validation, seven chart renders and a filter change. Browser visual inspection is a separate manual check.
 
-The project uses historical Indian used-car listings and INR. See the dataset plan, acquisition manifest and model card for source metadata, units and limitations. Segmentation and stronger price models remain future work.
+The project uses historical Indian used-car listings and INR. See the dataset plan, acquisition manifest and model card for source metadata, units and limitations. Segmentation and independently verified external-data evaluation remain future work.

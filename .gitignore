@@ -16,6 +16,7 @@ models/*.rds
 models/*.RDS
 models/metrics*.json
 !models/price_model.rds
+!models/linear_baseline.rds
 !models/metrics.json
 renv/library/
 renv/staging/

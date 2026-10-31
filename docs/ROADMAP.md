@@ -2,7 +2,7 @@
 
 ## 1. Foundation — current scope
 
-Implemented: real-data exploration, dataset acquisition/provenance, cleaning audit, an R linear regression price model, dataset-based prediction inputs, held-out metrics, validated price inference and live app checks. Segmentation remains deferred.
+Implemented: real-data exploration, dataset acquisition/provenance, cleaning audit, an R random forest with a retained linear baseline, dataset-based prediction inputs, held-out metrics, validated price inference and live app checks. Segmentation remains deferred.
 
 R Shiny frontend, Plumber backend, validation, example payload, launch scripts, checks and documentation are complete. Missing-model fallbacks remain for unavailable capabilities.
 
@@ -14,9 +14,9 @@ Verify source rights/version; download and fingerprint the CSV; audit fields, un
 
 Acceptance: one reproducible preparation command writes a quality report and split manifest; raw data remains immutable and ignored.
 
-## 3. Price prediction — baseline implemented; enhancements later
+## 3. Price prediction — linear baseline and selected forest implemented
 
-Current implementation uses base R stats::lm, a fixed seed-2026 grouped 80/20 split, training-only preprocessing and a median-price baseline. The evaluated training fit is deployed without refitting on test data. Metrics and limitations are in models/MODEL_CARD.md. Future work below must use a new validation strategy rather than repeatedly selecting models against the existing test set.
+Current implementation compares base R stats::lm and ranger random forests using training-only grouped CV, with a fixed seed-2026 grouped 80/20 split and median-price baseline. The selected forest reaches test benchmark R-squared 0.9243; external validation remains future work. The evaluated training fit is deployed without refitting on test data. Metrics and limitations are in models/MODEL_CARD.md. Future work below must use a new validation strategy rather than repeatedly selecting models against the existing test set.
 
 Install a reviewed training dependency set (candidate packages: tidymodels, ranger, readr, dplyr, janitor and renv). Build a training-median baseline, linear regression, then tuned random forest. Fit preprocessing within grouped cross-validation. Compare validation MAE/RMSE and inspect residuals; use the frozen test set only for the final selected pipeline.
 

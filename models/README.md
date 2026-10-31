@@ -1,12 +1,11 @@
 # Model artifacts
 
-price_model.rds contains a trained R linear regression's coefficients, fitted preprocessing metadata, dataset-derived form options and held-out metrics. The loader checks its artifact version, formula, finite coefficients and a positive example prediction before marking price inference ready. Segmentation remains not_trained.
+- price_model.rds: selected R ranger forest with training-only preprocessing, source-backed form options and evaluation metadata.
+- linear_baseline.rds and linear_metrics.json: preserved R stats::lm reference on the same split.
+- metrics.json: selected forest's test benchmark and both baselines.
+- model_selection.json: training-only grouped CV candidates, scores, selected settings and source fingerprint.
+- MODEL_CARD.md: features, preprocessing, metrics and limitations.
 
-The bundle includes the source fingerprint, model version, reference year and creation timestamp. Prediction reuses training preprocessing. Per-row training data, the lm QR matrix and residuals are omitted from the shipped bundle.
+The forest bundle omits per-row OOB predictions, calls and in-bag counts. Load only trusted local artifacts. Segmentation remains untrained.
 
-- price_model.rds
-- segmentation_model.rds (future)
-- metrics.json
-- MODEL_CARD.md
-
-Reproduce with Rscript scripts/train_price.R after acquiring the source dataset. See MODEL_CARD.md and metrics.json. Never load untrusted RDS files; only the trusted local model artifact is accepted.
+Run scripts/train_price.R to reproduce the selected model and linear reference. Run scripts/compare_price_models.R for the full training-only CV experiment; its candidate outputs stay in ignored data/processed/model_comparison and do not replace the deployed artifact.

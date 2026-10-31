@@ -8,7 +8,7 @@ stopifnot(dataset$ok, isTRUE(dataset$body$ready), is.data.frame(dataset$body$veh
           nrow(dataset$body$vehicles) > 0L)
 response <- api_request("/predict", vehicle_example())
 stopifnot(response$status == 200L, response$body$predicted_price_inr > 0,
-          identical(response$body$model_version, "linear-regression-v1"))
+          identical(response$body$model_version, "random-forest-v1"))
 options <- api_request("/predictor/options")
 stopifnot(options$ok, "Maruti" %in% options$body$fields$brand$choices,
           "Swift Dzire VDI" %in% options$body$models_by_brand$Maruti)
